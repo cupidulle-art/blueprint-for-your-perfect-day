@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="images/flower.png">
+<title>your perfect day</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>blueprint for your perfect day</h1>
+
+<div class="time-badge">
+  <span id="live-date">loading date...</span>
+  <span class="badge-divider">|</span>
+  <span id="live-time">loading time...</span>
+</div>
+
+<div class="weather-badge">
+  <span id="weather-icon">☁️</span>
+  <span id="weather-temp">--°C</span>
+  <span class="badge-divider">|</span>
+  <span id="weather-desc">loading description</span>
+</div>
+
+<script>
+  async function fetchCozyWeather() {
+    try {
+      // 1. Get approximate coordinates from visitor IP
+      const geoRes = await fetch('https://ipapi.co/json/');
+      const geoData = await geoRes.json();
+      
+      // 2. Fetch current weather from Open-Meteo API
+      const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${geoData.latitude}&longitude=${geoData.longitude}&current_weather=true`);
+      const weatherData = await weatherRes.json();
+      
+      const temp = Math.round(weatherData.current_weather.temperature);
+      const code = weatherData.current_weather.weathercode;
+
+      document.getElementById('weather-temp').innerText = `${temp}°c`;
+
+      // 3. Match weather code to a cute icon & mood label
+      let icon = '☁️';
+      let desc = 'cozy weather';
+
+      if (code === 0) {
+        icon = '☀️';
+        desc = 'sunnyyyy happy day !!';
+      } else if (code >= 1 && code <= 3) {
+        icon = '🌤️';
+        desc = 'couldy skies';
+      } else if (code >= 51 && code <= 67) {
+        icon = '🌧️';
+        desc = 'raincoat and sweater weather';
+      } else if (code >= 71) {
+        icon = '❄️';
+        desc = 'HOT CHOCOLATE IS READY!!';
+      } else if (code >= 95) {
+        icon = '⛈️';
+        desc = 'zeus is doing his job sighh';
+      }
+
+      document.getElementById('weather-icon').innerText = icon;
+      document.getElementById('weather-desc').innerText = desc;
+
+    } catch (err) {
+      // Backup fallback if API fails
+      document.getElementById('weather-temp').innerText = '??°c';
+      document.getElementById('weather-desc').innerText = 'loading description';
+    }
+  }
+
+  fetchCozyWeather();
+</script>
+
+<script>
+  function updateLiveClock() {
+    const now = new Date();
+    
+    // Formats date as "sat, aug 29"
+    const dateOptions = { weekday: 'short', month: 'short', day: 'numeric' };
+    const formattedDate = now.toLocaleDateString('en-US', dateOptions).toLowerCase();
+    
+    // Formats time as "4:14 pm"
+    const timeOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
+    const formattedTime = now.toLocaleTimeString('en-US', timeOptions).toLowerCase();
+    
+    document.getElementById('live-date').innerText = formattedDate;
+    document.getElementById('live-time').innerText = formattedTime;
+  }
+
+  // Run immediately on page load, then update every 1 second
+  updateLiveClock();
+  setInterval(updateLiveClock, 1000);
+</script>
+
+<div class="quote-card">
+  <p class="quote-title">your perfect daily reminder 💌</p>
+  <p id="daily-quote">✨ loading today's affirmation...</p>
+</div>
+
+<script>
+  const quotes = [
+    "confidence is 10% hard work and 90% delusion",
+  ];
+  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+  document.getElementById("daily-quote").innerText = randomQuote;
+</script>
+
+
+<div class="spotify-card">
+  <h2>today's playlist</h2>
+  <iframe 
+    style="border-radius:12px" 
+    src="https://open.spotify.com/embed/playlist/62bCmYlvF7YEIU5ZXpGhhK?utm_source=generator&si=f2b668971bf94232"></iframe>
+  </iframe>
+</div>
+
+
+<div class="mood-tracker">
+  <p class="mood-title">how are you feeling today?</p>
+  
+  <div class="mood-buttons">
+    <button onclick="setMood('happy', 'happy!')">😁</button>
+    <button onclick="setMood('sleepy', 'needing rest... sleepy head!')">😴</button>
+    <button onclick="setMood('sad', 'sad... dont worry, our web is going to make you happy')">😥</button>
+    <button onclick="setMood('hungry', 'hungry! u fattie')">🍔</button>
+  </div>
+  
+  <p id="mood-status">click an emoji to log your mood</p>
+</div>
+
+
+<script>
+  function setMood(vibe, message) {
+    document.getElementById("mood-status").innerText = "current mood: " + message;
+  }
+</script>
+
+<section >
+<h2>beauty</h2>
+
+<div class="button-container">
+    <div class="skincare">
+    <a href="button-skincare.html">
+        <button>
+            <span>skincare</span>
+            <img src="images/skincare.jpg" alt="skincare" class="btn-large-img">
+        </button>
+    </a>
+</div>
+    <div class="makeup">
+    <a href="button-makeup.html">
+        <button>
+            <span>makeup</span>
+            <img src="images/makeup.jpg" alt="makeup" class="btn-large-img">
+        </button>
+        </a>
+</div>
+    <div class="fitcheck">
+    <a href="button-fitcheck.html">
+        <button>
+            <span>fit check</span>
+            <img src="images/fitcheck.jpg" alt="fitcheck" class="btn-large-img">
+        </button>
+    </a>
+</div>
+</div>
+</section>
+
+<div class="section2">
+<h2>resets</h2>
+<div class="button-container">
+<div class="sundayreset">
+    <a href="button-sundayreset.html">
+        <button>
+            <span>sunday reset</span>
+            <img src="images/sundayreset.jpg" alt="sunday reset" class="btn-large-img">
+        </button>
+    </a>
+</div>
+<div class="newschoolyear">
+    <a href="button-newschoolyear.html">
+        <button>
+            <span>new school year</span>
+            <img src="images/newschoolyear.jpg" alt="new school year" class="btn-large-img">
+        </button>
+    </a>
+</div>
+</div>
+</div>
+
+<h2>cookie clicker</h2>
+
+<div class="cookie-card">
+  <p class="cookie-title">how many cookies do you have?</p>
+  <h2 id="cookie-count">0</h2>
+  
+  <button id="cookie-btn" onclick="clickCookie()">
+    🍪
+  </button>
+</div>
+
+<style>
+.cookie-card {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.65);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    padding: 20px;
+    max-width: 260px;
+    margin: 20px auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.cookie-title {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 13px;
+    font-weight: bold;
+    color: #6a5342;
+    margin-bottom: 4px;
+}
+
+#cookie-count {
+    font-family: "Playfair Display", serif;
+    font-size: 28px;
+    color: white;
+    margin: 4px 0 12px 0;
+}
+
+#cookie-btn {
+    font-size: 60px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.1s ease;
+    display: inline-block;
+}
+
+#cookie-btn:active {
+    transform: scale(0.85); /* Shrinks slightly when clicked */
+}
+</style>
+
+<script>
+  let cookies = 0;
+
+  function clickCookie() {
+      cookies++;
+      document.getElementById("cookie-count").innerText = cookies;
+  }
+</script>
+
+<section>
+<p>by alice and marissa</p>
+</section>
+
+</body>
+</html>
+
+
